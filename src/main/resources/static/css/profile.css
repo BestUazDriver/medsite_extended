@@ -1,0 +1,10 @@
+.logout-container{
+    width: fit-content;
+    height: fit-content;
+    margin: 20px 20px 20px auto;
+}
+.logout-button{
+    width: 80px;
+    height: 30px;
+    background-color: darkgoldenrod;
+}
