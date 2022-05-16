@@ -17,31 +17,38 @@
     </form>
 </div>
 <div class="parent">
-    <#if bank_accounts?size==0>
+    <#if illness?size==0>
         <div class="basic">
-            <p>No Bank Accounts Available</p>
+            <p>No Illness</p>
         </div>
     <#else>
         <div class="basic">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Bank Account Number</th>
-                    <th>Nal</th>
-                    <th>Points</th>
+                    <th>Ill</th>
+                    <th>Cures</th>
                 </tr>
                 </thead>
                 <tbody>
-                <#list bank_accounts as bank_acccount>
+                <#list illness as ill>
                     <tr>
-                        <td>${bank_acccount.getId()}</td>
-                        <td>${bank_acccount.getCash()!""}</td>
-                        <td>${bank_acccount.getPoints()!""}</td>
+                        <td>${ill.getName()}</td>
+                        <td>${ill.getCures()!""}</td>
                     </tr>
                 </#list>
                 </tbody>
             </table>
         </div>
+    </#if>
+</div>
+<div class="window-button">
+    <#if role=="USER">
+        <a href="/offer_note">Order note for doctor</a>
+    <#else>
+        <a href="/doc_notes">Available notes</a>
+        <br>
+        <a href="/assigned_notes">My notes</a>
     </#if>
 </div>
 </body>

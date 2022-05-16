@@ -1,4 +1,5 @@
 <!doctype html>
+<#import "spring.ftl" as spring/>
 <html lang="en">
 <head>
     <title>Welcome</title>
@@ -12,6 +13,7 @@
         <p style="background-color: darkgoldenrod">Sign in</p>
         <form method="post" action="/sign_in">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+
             <input type="email" id="email" name="email" placeholder="Почта" class="input">
             <br>
             <input id="password" name="password" placeholder="Пароль" class="input">
@@ -30,7 +32,7 @@
         <p style="background-color: darkgoldenrod">Sign up</p>
         <form method="post" action="/sign_up">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-            <input id="name" name="name" placeholder="Имя" class="input">
+            <input type="text" id="name" name="name" class="input" placeholder="Имя">
             <br>
             <input type="email" id="email" name="email" placeholder="Почта" class="input">
             <br>

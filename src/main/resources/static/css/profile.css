@@ -8,3 +8,19 @@
     height: 30px;
     background-color: darkgoldenrod;
 }
+.window-button{
+    background-color: darkgoldenrod;
+    display: block;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 2vw;
+    float: bottom;
+    width: 20%;
+    text-align: center;
+    border: solid 2px black;
+    margin: auto auto 10px;
+    align-items: center;
+    align-content: center;
+    height: 30%;
+    padding: 10px 10px 10px 10px;
+}
