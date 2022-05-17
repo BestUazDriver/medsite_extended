@@ -1,31 +1,30 @@
 $(document).ready(function () {
 
-    $("#submitButton").click(function (event) {
-
+    $("#button").click(function (event) {
         // Stop default form Submit.
         event.preventDefault();
 
         // Call Ajax Submit.
 
-        ajaxSubmitForm();
+        ajaxSubmitForm1();
 
     });
 
 });
 
-function ajaxSubmitForm() {
+function ajaxSubmitForm1() {
 
     // Get form
-    var form = $('#fileUploadForm')[0];
+    var form = $('#delete_ill')[0];
 
     var data = new FormData(form);
 
-    $("#submitButton").prop("disabled", true);
+    $("#button").prop("disabled", true);
 
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "/add_ill/upload",
+        url: "/add_ill/delete",
         data: data,
 
         // prevent jQuery from automatically transforming the data into a query string
@@ -34,16 +33,18 @@ function ajaxSubmitForm() {
         cache: false,
         timeout: 1000000,
         success: function (data, textStatus, jqXHR) {
-            $("#result").html(data);
+
+            $("#result1").html(data);
             console.log("SUCCESS : ", data);
-            $("#submitButton").prop("disabled", false);
-            $('#fileUploadForm')[0].reset();
+            $("#button").prop("disabled", false);
+            $('#delete_ill')[0].reset();
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
-            $("#result").html(jqXHR.responseText);
+            $("#result1").html(jqXHR.responseText);
             console.log("ERROR : ", jqXHR.responseText);
-            $("#submitButton").prop("disabled", false);
+            $("#button").prop("disabled", false);
+
         }
     });
 

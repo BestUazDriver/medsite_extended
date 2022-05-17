@@ -5,6 +5,8 @@
     <title>Welcome</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/profile.css">
 </head>
 
 <body>

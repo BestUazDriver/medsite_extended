@@ -1,9 +1,6 @@
 package com.sabitov.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -14,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString(exclude = {"patient", "doctor"})
 public class Note {
 
     @Id

@@ -1,5 +1,6 @@
 package com.sabitov.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,8 +12,8 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "accounts")
-@ToString(exclude = {"illness", "notes", "docNotes"})
-@EqualsAndHashCode(exclude = {"illness", "notes", "docNotes"})
+@ToString(exclude = {"illness", "notes", "docNotes", "avatar"})
+@EqualsAndHashCode(exclude = {"illness", "notes", "docNotes", "avatar"})
 public class Account {
 
     public enum Role {
@@ -42,6 +43,7 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ill_id", referencedColumnName = "id"))

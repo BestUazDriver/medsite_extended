@@ -29,4 +29,6 @@ public interface AccountService {
     List<Ill> findAllIllnessByAccountId(Long id);
 
     void addIll(Ill ill, Account account);
+
+    void deleteIll(Account account, Ill ill);
 }

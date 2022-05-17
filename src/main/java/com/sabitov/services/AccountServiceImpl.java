@@ -133,4 +133,13 @@ public class AccountServiceImpl implements AccountService {
         }
         illRepository.save(ill);
     }
+
+    @Transactional
+    @Override
+    public void deleteIll(Account account, Ill ill) {
+        account.getIllness().remove(ill);
+        accountRepository.save(account);
+        ill.getAccounts().remove(account);
+        illRepository.save(ill);
+    }
 }

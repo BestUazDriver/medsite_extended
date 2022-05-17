@@ -11,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude = "ills")
+@ToString(exclude = {"ills", "ingredients"})
+@EqualsAndHashCode(exclude = {"ills", "ingredients"})
 public class Cure {
 
     @Id

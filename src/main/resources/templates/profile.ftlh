@@ -27,14 +27,12 @@
                 <thead>
                 <tr>
                     <th>Ill</th>
-                    <th>Cures</th>
                 </tr>
                 </thead>
                 <tbody>
                 <#list illness as ill>
                     <tr>
                         <td>${ill.getName()}</td>
-                        <td>${ill.getCures()!""}</td>
                     </tr>
                 </#list>
                 </tbody>

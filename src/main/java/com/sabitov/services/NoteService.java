@@ -19,4 +19,6 @@ public interface NoteService {
     Note findById(int parseInt);
 
     List<Note> findAllWithoutAssigners();
+
+    void delete(Long id);
 }

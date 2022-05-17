@@ -1,16 +1,19 @@
 package com.sabitov.controllers;
 
+import com.sabitov.models.Account;
 import com.sabitov.models.Ill;
+import com.sabitov.models.Note;
+import com.sabitov.services.AccountService;
 import com.sabitov.services.IllService;
+import com.sabitov.services.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -19,10 +22,16 @@ import java.util.List;
 public class AddIllController {
 
     private final IllService illService;
+    private final AccountService accountService;
+    private final NoteService noteService;
 
     @GetMapping
-    public String getAvailableIlls(Model model){
+    public String getAvailableIlls(Model model, HttpServletRequest request) {
         model.addAttribute("illness", illService.findAll());
+        Account account = (Account) request.getSession().getAttribute("patient");
+        if (account != null) {
+            model.addAttribute("patient_illness", account.getIllness());
+        }
         return "add_ill";
     }
 
@@ -32,5 +41,15 @@ public class AddIllController {
         return illService.searchExistsEmail(name);
     }
 
-
+    @PostMapping("/finish")
+    public String finishAppointment(HttpServletRequest request, Principal principal) {
+        Account account = (Account) request.getSession().getAttribute("patient");
+        Account doctor = accountService.findAccountByEmail(principal.getName()).orElseThrow(IllegalArgumentException::new);
+        Note note = (Note) request.getSession().getAttribute("note");
+        request.getSession().removeAttribute("note");
+        request.getSession().removeAttribute("patient");
+        noteService.delete(note.getId());
+        System.out.println("finished appointment");
+        return "redirect:/profile";
+    }
 }

@@ -1,17 +1,13 @@
 package com.sabitov.controllers;
 
-import com.sabitov.models.Ill;
-import com.sabitov.repositories.IllCriteriaRepository;
 import com.sabitov.services.AccountService;
 import com.sabitov.services.IllService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/test")
@@ -21,11 +17,10 @@ public class TestController {
     private final IllService illRepository;
     private final AccountService accountService;
 
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Ill> getIllsByName() {
-        Ill ill = Ill.builder().
-                name("gonoreya").build();
-        return illRepository.findAll();
+    @GetMapping
+    public String get(){
+        ArrayList<Object> objects = null;
+        objects.get(1);
+        return "home";
     }
 }

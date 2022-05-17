@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -28,8 +29,10 @@ public class AssignedNotesController {
     }
 
     @GetMapping("/start/{note_id}")
-    public String getStarted(@PathVariable String note_id, Model model){
-        model.addAttribute("account", noteService.findById(Integer.parseInt(note_id)).getPatient());
+    public String getStarted(@PathVariable String note_id, HttpServletRequest request){
+        request.getSession().setAttribute("patient", noteService.findById(Integer.parseInt(note_id)).getPatient());
+        request.getSession().setAttribute("note", noteService.findById(Integer.parseInt(note_id)));
+        System.err.println(noteService.findById(Integer.parseInt(note_id)).getPatient());
         return "redirect:/add_ill";
     }
 

@@ -81,4 +81,9 @@ public class NoteServiceImpl implements NoteService {
     public List<Note> findAllWithoutAssigners() {
         return findAll().stream().filter(note -> note.getDoctor() == null).collect(Collectors.toList());
     }
+
+    @Override
+    public void delete(Long id) {
+        noteRepository.deleteById(id);
+    }
 }

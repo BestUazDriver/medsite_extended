@@ -1,5 +1,6 @@
 package com.sabitov.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude = "cures")
+@ToString(exclude = {"cures", "accounts"})
+@EqualsAndHashCode(exclude = {"cures", "accounts"})
 public class Ill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +23,7 @@ public class Ill {
     @ManyToMany(mappedBy = "ills")
     private List<Cure> cures;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "illness")
     private List<Account> accounts;
 
