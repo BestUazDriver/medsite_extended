@@ -1,7 +1,6 @@
 package com.sabitov.repositories;
 
 import com.sabitov.models.Account;
-import com.sabitov.models.Cure;
 import com.sabitov.models.Ill;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.jpa.QueryHints;
@@ -57,11 +56,12 @@ public class IllCriteriaRepositoryImpl implements IllCriteriaRepository {
         entityManager.persist(ill);
     }
 
-    public void get() {
-        List<Account> posts = entityManager.createQuery(
+    public List<Account> get() {
+        List<Account> accounts = entityManager.createQuery(
                 "    select distinct p from Ill pc join pc.accounts p where pc.cures.size > :minScore order by p.id", Account.class)
                 .setParameter("minScore", 2)
                 .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
                 .getResultList();
+        return accounts;
     }
 }
