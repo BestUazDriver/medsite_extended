@@ -1,15 +1,15 @@
 package com.sabitov.repositories;
 
+import com.sabitov.models.Account;
+import com.sabitov.models.Cure;
 import com.sabitov.models.Ill;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Repository
@@ -55,5 +55,13 @@ public class IllCriteriaRepositoryImpl implements IllCriteriaRepository {
     @Override
     public void save(Ill ill) {
         entityManager.persist(ill);
+    }
+
+    public void get() {
+        List<Account> posts = entityManager.createQuery(
+                "    select distinct p from Ill pc join pc.accounts p where pc.cures.size > :minScore order by p.id", Account.class)
+                .setParameter("minScore", 2)
+                .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
+                .getResultList();
     }
 }
