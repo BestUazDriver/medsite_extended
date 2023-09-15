@@ -1,0 +1,5 @@
+use testschema;
+insert into accounts (confirm_code, email, name, password) values (12, 'email1', 'name1', 'password1'),
+(12, 'email2', 'name2', 'password2'),
+(12, 'email3', 'name3', 'password3'),
+(12, 'email4', 'name4', 'password4');
