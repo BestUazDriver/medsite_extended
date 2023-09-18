@@ -1,4 +1,6 @@
 import org.example.config.Property;
+import org.hibernate.type.LongType;
+import org.hibernate.type.spi.TypeConfiguration;
 import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpServerErrorException;
@@ -29,6 +31,9 @@ public class MainTest {
 //        HttpStatus httpStatus = (HttpStatus) new HttpServerErrorException(HttpStatusCode.valueOf(400)).getStatusCode();
 //        System.out.println(new HttpServerErrorException(HttpStatusCode.valueOf(400)).getStatusCode());
 //        System.out.println(httpStatus);
+
+        System.out.println(new TypeConfiguration().getBasicTypeRegistry().getRegisteredType(String.valueOf(Long.class)));
+        System.out.println(LongType.INSTANCE.toString());
     }
 
 

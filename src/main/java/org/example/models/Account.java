@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "accounts")
-@ToString(exclude = {"illness", "notes", "docNotes", "avatar"})
+@ToString(exclude = {"illness", "docNotes", "avatar"})
 @EqualsAndHashCode(exclude = {"illness", "notes", "docNotes", "avatar"})
 public class Account implements Serializable {
 
