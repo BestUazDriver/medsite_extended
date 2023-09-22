@@ -1,8 +1,10 @@
 package org.example.repository;
 
-import org.example.models.Account;
-import org.example.models.Note;
+import org.example.models.*;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class TestRepository {
@@ -19,8 +22,11 @@ public class TestRepository {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private SessionFactory sessionFactory;
 
-//    public Ill findIllByName(String name) {
+
+    //    public Ill findIllByName(String name) {
 //        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 //        CriteriaQuery<Ill> illQuery = criteriaBuilder.createQuery(Ill.class);
 //        Root<Ill> ill = illQuery.from(Ill.class);
@@ -46,10 +52,10 @@ public class TestRepository {
 //        return (List<Account>) DetachedCriteria.forClass(Account.class)
 //                .add(Restrictions.eq("name", userId)).getExecutableCriteria(entityManager.unwrap(Session.class)).list();
 //    }
-//    public Account findByUserId(Long userId) {
-//        return (Account) DetachedCriteria.forClass(Account.class)
-//                .add(Restrictions.eq("id", userId)).getExecutableCriteria(entityManager.unwrap(Session.class)).uniqueResult();
-//    }
+    public Account findByUserId(Long userId) {
+        return (Account) DetachedCriteria.forClass(Account.class)
+                .add(Restrictions.eq("id", userId)).getExecutableCriteria(entityManager.unwrap(Session.class)).uniqueResult();
+    }
 //    public Account getAccountById(Long id, String name){
 //        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 //        CriteriaQuery<Account> accountQuery = criteriaBuilder.createQuery(Account.class);
@@ -109,7 +115,8 @@ public class TestRepository {
         criteria.addOrder(Order.asc("id"));
         return criteria.getExecutableCriteria(entityManager.unwrap(Session.class)).list();
     }
-//
+
+    //
     public int countUserApplications(String userId) {
         CriteriaBuilder criteriaBuilder = entityManager.unwrap(Session.class).getCriteriaBuilder();
         CriteriaQuery<Account> userCriteriaQuery = criteriaBuilder.createQuery(Account.class);
@@ -155,7 +162,7 @@ public class TestRepository {
 //    }
 
     public List<Account> findAllWithAccount() {
-        CriteriaBuilder criteriaBuilder = entityManager.unwrap(Session.class).getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
         CriteriaQuery<Account> userCriteriaQuery = criteriaBuilder.createQuery(Account.class);
         Root<Account> userApplicationRoot = userCriteriaQuery.from(Account.class);
         Join<Account, Note> join = userApplicationRoot.join("notes", JoinType.LEFT);
@@ -173,20 +180,20 @@ public class TestRepository {
         criteria.add(Restrictions.isNotNull("notes"));
 
         criteria.createAlias("notes", "notes");
-        criteria.add(Restrictions.eq("notes.address",  "address2"));
+        criteria.add(Restrictions.eq("notes.address", "address2"));
         return criteria.getExecutableCriteria(entityManager.unwrap(Session.class)).list();
     }
 
-    public List<Note> getNotesByAccountId(Long accountId){
-        CriteriaBuilder criteriaBuilder = entityManager.unwrap(Session.class).getCriteriaBuilder();
-        CriteriaQuery<Note> query = criteriaBuilder.createQuery(Note.class);
-        Root<Note> from = query.from(Note.class);
+//    public List<Note> getNotesByAccountId(Long accountId){
+//        CriteriaBuilder criteriaBuilder = entityManager.unwrap(Session.class).getCriteriaBuilder();
+//        CriteriaQuery<Note> query = criteriaBuilder.createQuery(Note.class);
+//        Root<Note> from = query.from(Note.class);
+//
+//        query.where(criteriaBuilder.equal(from.get("patient"), accountId));
+//        return entityManager.unwrap(Session.class).createQuery(query).getResultList();
+//    }
 
-        query.where(criteriaBuilder.equal(from.get("patient"), accountId));
-        return entityManager.unwrap(Session.class).createQuery(query).getResultList();
-    }
-
-    public Account getAccountById(Long id){
+    public Account getAccountById(Long id) {
         CriteriaBuilder criteriaBuilder = entityManager.unwrap(Session.class).getCriteriaBuilder();
         CriteriaQuery<Account> userCriteriaQuery = criteriaBuilder.createQuery(Account.class);
         Root<Account> userApplicationRoot = userCriteriaQuery.from(Account.class);
@@ -195,4 +202,192 @@ public class TestRepository {
         return entityManager.unwrap(Session.class).createQuery(userCriteriaQuery).getSingleResult();
     }
 
+    //    public List<Note> findByApplicationIdAndFeatureId(Long applicationId, Long featureId) {
+//        DetachedCriteria criteria = DetachedCriteria.forClass(Note.class);
+//        criteria.add(Restrictions.eq("patient", applicationId));
+//        criteria.add(Restrictions.eq("doctor", featureId));
+//        DetachedCriteria feature = criteria.createCriteria("doctor");
+//        feature.createAlias("docNotes", "docNotes");
+////        feature.addOrder(Order.asc("category.id"));
+//        feature.createAlias("notes", "another_notes", org.hibernate.sql.JoinType.LEFT_OUTER_JOIN);
+////        feature.addOrder(Order.asc("group.orderNum"));
+////        feature.addOrder(Order.asc("group.id"));
+////        feature.addOrder(Order.asc("orderNum"));
+//        return criteria.getExecutableCriteria(entityManager.unwrap(Session.class)).list();
+//    }
+    private Session session() {
+        return entityManager.unwrap(Session.class);
+    }
+
+    public List<Note> getNotesByAccountId(Long id) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Note.class);
+        criteria.createAlias("patient", "pat");
+        criteria.add(Restrictions.eq("pat.id", id));
+        criteria.createAlias("pat.illness", "ill");
+        criteria.add(Restrictions.eq("ill.name", "chuma"));
+        return criteria.getExecutableCriteria(session()).list();
+    }
+//    public ApplicationFeatureMutation findByApplicationIdAndFeatureId(Long applicationId, Long featureId) {
+//        DetachedCriteria criteria = DetachedCriteria.forClass(ApplicationFeatureMutation.class);
+//        criteria.add(Restrictions.eq("applicationId", applicationId));
+//        criteria.add(Restrictions.eq("feature.id", featureId));
+//        DetachedCriteria feature = criteria.createCriteria("feature");
+//        feature.createAlias("category", "category");
+//        feature.addOrder(Order.asc("category.id"));
+//        feature.createAlias("featureGroup", "group");
+//        feature.addOrder(Order.asc("group.orderNum"));
+//        feature.addOrder(Order.asc("group.id"));
+//        feature.addOrder(Order.asc("orderNum"));
+//        return (ApplicationFeatureMutation) criteria.getExecutableCriteria(session()).uniqueResult();
+//    }
+
+    public ApplicationFeatureMutation findByApplicationIdAndFeatureId(Long applicationId, Long featureId) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<ApplicationFeatureMutation> query = criteriaBuilder.createQuery(ApplicationFeatureMutation.class);
+        Root<ApplicationFeatureMutation> root = query.from(ApplicationFeatureMutation.class);
+
+        query.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("applicationId"), applicationId)),
+                criteriaBuilder.equal(root.get("feature"), featureId));
+
+        Join<ApplicationFeatureMutation, Feature> featureJoin = root.join("feature");
+        query.orderBy(criteriaBuilder.asc(featureJoin.get("category")));
+        Join<Feature, FeatureGroup> featureGroupJoin = featureJoin.join("featureGroup");
+        query.orderBy(
+                criteriaBuilder.asc(featureGroupJoin.get("orderNum")),
+                criteriaBuilder.asc(featureGroupJoin.get("id")),
+                criteriaBuilder.asc(featureJoin.get("orderNum"))
+        );
+        return session().createQuery(query).getSingleResult();
+    }
+
+    public List<ApplicationFeatureMutation> findByApplicationId(Long applicationId) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<ApplicationFeatureMutation> query = criteriaBuilder.createQuery(ApplicationFeatureMutation.class);
+        Root<ApplicationFeatureMutation> root = query.from(ApplicationFeatureMutation.class);
+
+        query.where(criteriaBuilder.equal(root.get("applicationId"), applicationId));
+        Join<ApplicationFeatureMutation, Feature> featureJoin = root.join("feature");
+        Join<Feature, FeatureGroup> featureGroupJoin = featureJoin.join("featureGroup");
+        query.orderBy(
+                criteriaBuilder.asc(featureJoin.get("category")),
+                criteriaBuilder.asc(featureGroupJoin.get("orderNum")),
+                criteriaBuilder.asc(featureJoin.get("orderNum")));
+
+        return session().createQuery(query).getResultList();
+    }
+
+    public List<ApplicationFeatureMutation> findByApplicationIdOld(Long applicationId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(ApplicationFeatureMutation.class);
+        criteria.add(Restrictions.eq("applicationId", applicationId));
+        DetachedCriteria feature = criteria.createCriteria("feature");
+        feature.createAlias("category", "category");
+        feature.addOrder(Order.asc("category.id"));
+        feature.createAlias("featureGroup", "group");
+        feature.addOrder(Order.asc("group.orderNum"));
+        feature.addOrder(Order.asc("orderNum"));
+        return criteria.getExecutableCriteria(session()).list();
+    }
+
+    public List<ApplicationFeatureMutation> findByFeatureIdOld(Long featureId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(ApplicationFeatureMutation.class);
+        DetachedCriteria feature = criteria.createCriteria("feature");
+        feature.add(Restrictions.eq("id", featureId));
+        return criteria.getExecutableCriteria(session()).list();
+    }
+
+    public List<Account> findByFeatureIdNew(List<Long> featureId) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<Account> query = criteriaBuilder.createQuery(Account.class);
+        Root<Account> root = query.from(Account.class);
+
+        Predicate[] predicates = new Predicate[featureId.size()];
+        for (int i = 0; i < featureId.size(); i++) {
+            predicates[i] = criteriaBuilder.equal(root.get("id"), featureId.get(i));
+        }
+        query.where(
+                criteriaBuilder.or(
+                        predicates
+                )
+        );
+//        query.where(criteriaBuilder.equal(root.get("feature"), featureId));
+        return session().createQuery(query).getResultList();
+    }
+
+    public List<ApplicationFeatureMutation> findApplicationFeaturesNew(Long applicationId, Long categoryId) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<ApplicationFeatureMutation> query = criteriaBuilder.createQuery(ApplicationFeatureMutation.class);
+        Root<ApplicationFeatureMutation> root = query.from(ApplicationFeatureMutation.class);
+        Join<ApplicationFeatureMutation, Feature> featureJoin = root.join("feature");
+
+        query.where(criteriaBuilder.and(
+                criteriaBuilder.equal(root.get("applicationId"), applicationId),
+                criteriaBuilder.equal(featureJoin.get("category"), categoryId))).orderBy(criteriaBuilder.asc(criteriaBuilder.function("rand", Double.class)));
+        return session().createQuery(query).getResultList();
+    }
+
+    public List<ApplicationFeatureMutation> findApplicationFeaturesOld(Long applicationId, Long categoryId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(ApplicationFeatureMutation.class);
+        criteria.add(Restrictions.eq("applicationId", applicationId));
+        DetachedCriteria category = criteria.createCriteria("feature");
+        category.createAlias("category", "category");
+        category.add(Restrictions.eq("category.id", categoryId));
+        return criteria.getExecutableCriteria(session()).list();
+    }
+
+    public boolean exists(Long initiatorId, String resourceName, Long resourceId, List<UserActivity> activity) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<Account> query = criteriaBuilder.createQuery(Account.class);
+        Root<Account> root = query.from(Account.class);
+
+        query.where(criteriaBuilder.and(
+                criteriaBuilder.equal(root.get("id"), initiatorId),
+                criteriaBuilder.equal(root.get(resourceName), resourceId),
+//                criteriaBuilder.equal(root.get("email"), activity.toString())
+                root.get("email").in(activity.stream().map(UserActivity::toString).collect(Collectors.toList()))
+        ));
+        return (session().createQuery(query).getSingleResult()) != null;
+    }
+
+//    public boolean exists(Long initiatorId, String resourceName, Long resourceId, UserActivity activity) {
+//        DetachedCriteria criteria = DetachedCriteria.forClass(Account.class);
+//        criteria.add(Restrictions.eq("id", initiatorId));
+//        criteria.add(Restrictions.eq(resourceName + ".id", resourceId));
+//        criteria.add(Restrictions.eq("email", activity.toString()));
+//        criteria.setProjection(Projections.rowCount());
+//        Object result = criteria.getExecutableCriteria(session()).uniqueResult();
+//        return result == null ? false : ((Number) result).intValue() > 0;
+//    }
+
+    private class BulkNotifyFirstThenDateOrder extends Order {
+        private static final long serialVersionUID = 1L;
+
+        public BulkNotifyFirstThenDateOrder() {
+            super("", false);
+        }
+
+        @Override
+        public String toSqlString(Criteria criteria, org.hibernate.criterion.CriteriaQuery criteriaQuery) throws HibernateException {
+            return "(activity = 'bulk_notification' AND was_viewed = FALSE) DESC";
+        }
+    }
+//    public int countUserBookmarks(Long userId) {
+//        DetachedCriteria criteria = DetachedCriteria.forClass(Account.class);
+//        criteria.add(Restrictions.eq("avatar.id", userId));
+//        criteria.setProjection(Projections.rowCount());
+//        Object result = criteria.getExecutableCriteria(session()).uniqueResult();
+//        return result == null ? 0 : ((Number) result).intValue();
+//    }
+
+    public int countUserBookmarks(Long userId) {
+        CriteriaBuilder criteriaBuilder = session().getCriteriaBuilder();
+        CriteriaQuery<Account> query = criteriaBuilder.createQuery(Account.class);
+        Root<Account> root = query.from(Account.class);
+
+        query.where(criteriaBuilder.equal(root.get("avatar"), userId));
+        return session().createQuery(query).getResultList().size();
+    }
+
+
+//new TypeConfiguration().getBasicTypeRegistry().getRegisteredType(String.class)
 }

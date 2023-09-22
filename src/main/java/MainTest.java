@@ -31,7 +31,7 @@ public class MainTest {
 //        HttpStatus httpStatus = (HttpStatus) new HttpServerErrorException(HttpStatusCode.valueOf(400)).getStatusCode();
 //        System.out.println(new HttpServerErrorException(HttpStatusCode.valueOf(400)).getStatusCode());
 //        System.out.println(httpStatus);
-
+        System.out.println(System.getenv("CATALINA_HOME"));
         System.out.println(new TypeConfiguration().getBasicTypeRegistry().getRegisteredType(String.valueOf(Long.class)));
         System.out.println(LongType.INSTANCE.toString());
     }

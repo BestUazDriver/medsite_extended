@@ -16,3 +16,5 @@ insert into note (address, office, patient_id) values
 ('address1', 11, 1),
 ('address2', 12, 1),
 ('address3', 13, 2);
+INSERT INTO `testschema`.`sp_category` (`id`, `apps_count`, `description`, `discussion_count`, `name`, `name_synonyms`, `page_description`, `page_keywords`, `page_title`, `priority`, `strcode`, `total_visits`, `parent_id`) VALUES ('1', '3', 'description', '0', 'name', 'name_synonyms', 'page_description', 'page_keywords', 'page_title', '1', 'strcode', '2', '1');
+INSERT INTO `testschema`.`sp_category` (`id`, `apps_count`, `description`, `discussion_count`, `name`, `name_synonyms`, `page_description`, `page_keywords`, `page_title`, `priority`, `strcode`, `total_visits`, `parent_id`) VALUES ('2', '3', 'description', '0', 'name', 'name_synonyms', 'page_description', 'page_keywords', 'page_title', '1', 'strcode', '2', '2');
